@@ -17,7 +17,7 @@ public class AuthorController {
 
     @GetMapping("/all")
     public List<Author> getAllAuthors(){
-        List<Author> authors = authorService.getAll();
+return authorRepository.findAll();
         return authors;
     }
 
