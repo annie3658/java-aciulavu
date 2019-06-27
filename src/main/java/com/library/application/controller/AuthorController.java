@@ -1,24 +1,29 @@
 package com.library.application.controller;
 
+import com.library.application.dto.AuthorDTO;
 import com.library.application.entity.Author;
 import com.library.application.service.AuthorService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
 
+    private final @NonNull AuthorService authorService;
+
     @Autowired
-    private AuthorService authorService;
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
 
     @GetMapping("/all")
-    public List<Author> getAllAuthors(){
-        List<Author> authors = authorService.getAll();
-        return authors;
+    public List<AuthorDTO> getAllAuthors(){
+        return authorService.getAll();
+
     }
 
     @PutMapping
@@ -32,13 +37,13 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Author> getAuthor(@PathVariable("id") String id){
-        return authorService.findById(id);
+    public AuthorDTO getAuthor(@PathVariable("id") String id){
+        return authorService.findAuthorById(id);
     }
 
-    @GetMapping("/author/{lastName}")
-    public Author getAuthorByLastName(@PathVariable("lastName") String lastName){
-        return authorService.findByLastName(lastName);
+    @GetMapping("/author/{firstName}/{lastName}")
+    public AuthorDTO getAuthorByLastName(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName){
+        return authorService.findAuthorByFullName(lastName, firstName);
     }
 
     @DeleteMapping("/{id}")

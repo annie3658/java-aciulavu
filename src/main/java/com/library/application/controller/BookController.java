@@ -1,8 +1,10 @@
 package com.library.application.controller;
 
+import com.library.application.dto.AuthorBooksDTO;
 import com.library.application.dto.BookDTO;
 import com.library.application.entity.Book;
 import com.library.application.service.BookService;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +14,15 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
+    private final @NonNull BookService bookService;
+
     @Autowired
-    private BookService bookService;
+    public BookController(@NonNull BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping("/all")
-    public List<Book> getAllBooks(){
+    public List<BookDTO> getAllBooks(){
         return bookService.getAll();
     }
 
@@ -36,20 +42,21 @@ public class BookController {
     }
 
     @GetMapping("/book/{title}")
-    public Book getBookByTitle(@PathVariable("title") String title){
+    public BookDTO getBookByTitle(@PathVariable("title") String title){
         return bookService.findByTitle(title);
     }
 
-
-    @GetMapping("/byAuthor/{author}")
-    public BookDTO getAllBooksByAuthor(@PathVariable("author") String author){
-        return bookService.getAllBooksByAuthor(author);
+    @GetMapping("/bookById/{id}")
+    public BookDTO getBookById(@PathVariable("id") String id){
+        return bookService.findBookById(id);
     }
 
-    @GetMapping("/booksByAuthor/{author}")
-    public List<Book> getBooksByAuthor(@PathVariable("author") String author){
-        return bookService.getBooksByAuthor(author);
+
+    @GetMapping("/byAuthor/{firstName}/{lastName}")
+    public AuthorBooksDTO getAllBooksByAuthor(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName){
+        return bookService.getAllBooksByAuthor(lastName, firstName);
     }
+
 
 
 

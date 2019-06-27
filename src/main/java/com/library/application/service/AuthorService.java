@@ -1,37 +1,79 @@
 package com.library.application.service;
 
+import com.library.application.dto.AuthorDTO;
 import com.library.application.entity.Author;
 import com.library.application.repository.AuthorRepository;
+import com.library.application.utils.DTOUtil;
+import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService{
+
+    private final @NonNull AuthorRepository authorRepository;
+    private DTOUtil dtoUtil = new DTOUtil();
+
     @Autowired
-    private AuthorRepository authorRepository;
-
-    public Optional<Author> findById(String id){
-        return authorRepository.findById(id);
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
-    public Author findByLastName(String lastName){
-        return authorRepository.findAuthorByLastName(lastName);
+    private Author findById(String id){
+       Optional<Author> foundAuthor = authorRepository.findById(id);
+        return setFoundAuthor(foundAuthor);
     }
 
-    public List<Author> getAll(){
+    public AuthorDTO findAuthorById(String id){
+        return dtoUtil.authorToDTO(findById(id));
+    }
+
+    public Author findByFullName(String lastName, String firstName){
+
+        Optional<Author> foundAuthor = Optional.ofNullable(authorRepository.findAuthorByLastNameAndAndFirstName(lastName, firstName));
+        return setFoundAuthor(foundAuthor);
+    }
+
+    private Author setFoundAuthor(Optional<Author> foundAuthor) {
+        if (foundAuthor.isPresent()) {
+            return foundAuthor.get();
+        }
+        Author author = new Author();
+        author.setId(StringUtils.EMPTY);
+        author.setBio(StringUtils.EMPTY);
+        author.setDateOfBirth(null);
+        author.setLastName(StringUtils.EMPTY);
+        author.setFirstName(StringUtils.EMPTY);
+        return author;
+    }
+
+    public AuthorDTO findAuthorByFullName(String lastName, String firstName){
+        return dtoUtil.authorToDTO(authorRepository.findAuthorByLastNameAndAndFirstName(lastName, firstName));
+    }
+
+    public List<AuthorDTO> getAll(){
         List<Author> authors = authorRepository.findAll();
-        return authors;
+        return authors.stream()
+                .map(author -> dtoUtil.authorToDTO(author))
+                .collect(Collectors.toList());
     }
 
-    public Author insert(Author author){
-        return authorRepository.insert(author);
+    public AuthorDTO insert(Author author){
+        Author existingAuthor = findByFullName(author.getLastName(), author.getFirstName());
+        if(existingAuthor.getId().equals(StringUtils.EMPTY)) {
+            return dtoUtil.authorToDTO(authorRepository.insert(author));
+        }
+        author.setId(existingAuthor.getId());
+        return this.update(author);
     }
 
-    public Author update(Author author){
-        return authorRepository.save(author);
+    public AuthorDTO update(Author author){
+        return dtoUtil.authorToDTO(authorRepository.save(author));
     }
 
     public void delete(String id){
