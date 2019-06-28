@@ -64,13 +64,13 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public BookDTO insert(Book book) {
-        authorService.insert(book.getAuthor());
-        return dtoUtil.bookToDTO(bookRepository.insert(book));
+    public BookDTO insert(BookDTO book) {
+        authorService.insert(dtoUtil.authorToDTO(book.getAuthor()));
+        return dtoUtil.bookToDTO(bookRepository.insert(dtoUtil.dtoToBook(book)));
     }
 
-    public BookDTO update(Book book){
-       return dtoUtil.bookToDTO(bookRepository.save(book));
+    public BookDTO update(BookDTO book){
+       return dtoUtil.bookToDTO(bookRepository.save(dtoUtil.dtoToBook(book)));
     }
 
     public void delete(String id) {

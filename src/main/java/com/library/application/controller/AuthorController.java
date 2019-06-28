@@ -1,7 +1,6 @@
 package com.library.application.controller;
 
 import com.library.application.dto.AuthorDTO;
-import com.library.application.entity.Author;
 import com.library.application.service.AuthorService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,12 @@ public class AuthorController {
     }
 
     @PutMapping
-    public void insert(@RequestBody Author author){
+    public void insert(@RequestBody AuthorDTO author){
         authorService.insert(author);
     }
 
     @PostMapping
-    public void update(@RequestBody Author author){
+    public void update(@RequestBody AuthorDTO author){
         authorService.update(author);
     }
 

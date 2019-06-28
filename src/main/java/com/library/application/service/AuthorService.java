@@ -63,17 +63,17 @@ public class AuthorService{
                 .collect(Collectors.toList());
     }
 
-    public AuthorDTO insert(Author author){
+    public AuthorDTO insert(AuthorDTO author){
         Author existingAuthor = findByFullName(author.getLastName(), author.getFirstName());
         if(existingAuthor.getId().equals(StringUtils.EMPTY)) {
-            return dtoUtil.authorToDTO(authorRepository.insert(author));
+            return dtoUtil.authorToDTO(authorRepository.insert(dtoUtil.dtoToAuthor(author)));
         }
         author.setId(existingAuthor.getId());
         return this.update(author);
     }
 
-    public AuthorDTO update(Author author){
-        return dtoUtil.authorToDTO(authorRepository.save(author));
+    public AuthorDTO update(AuthorDTO author){
+        return dtoUtil.authorToDTO(authorRepository.save(dtoUtil.dtoToAuthor(author)));
     }
 
     public void delete(String id){

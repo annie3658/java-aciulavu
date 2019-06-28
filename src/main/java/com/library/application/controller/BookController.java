@@ -2,7 +2,6 @@ package com.library.application.controller;
 
 import com.library.application.dto.AuthorBooksDTO;
 import com.library.application.dto.BookDTO;
-import com.library.application.entity.Book;
 import com.library.application.service.BookService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +26,12 @@ public class BookController {
     }
 
     @PutMapping
-    public void insert(@RequestBody Book book){
+    public void insert(@RequestBody BookDTO book){
         bookService.insert(book);
     }
 
     @PostMapping
-    public void update (@RequestBody Book book){
+    public void update (@RequestBody BookDTO book){
         bookService.update(book);
     }
 
