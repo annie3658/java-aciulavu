@@ -1,14 +1,14 @@
 package com.library.application.service;
-
+import ch.qos.logback.classic.Logger;
 import com.library.application.dto.AuthorBooksDTO;
 import com.library.application.dto.AuthorDTO;
 import com.library.application.dto.BookDTO;
 import com.library.application.entity.Book;
+import com.library.application.exception.BookNotFoundException;
 import com.library.application.repository.BookRepository;
 import com.library.application.utils.DTOUtil;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(BookService.class);
 
     private final @NonNull BookRepository bookRepository;
     private final @NonNull AuthorService authorService;
@@ -38,13 +39,8 @@ public class BookService {
         if (foundBook.isPresent()) {
             return foundBook.get();
         } else {
-            Book book = new Book();
-            book.setIsbn(StringUtils.EMPTY);
-            book.setDescription(StringUtils.EMPTY);
-            book.setPublishedDate(null);
-            book.setRating(NumberUtils.DOUBLE_ZERO);
-            book.setAuthor(null);
-            return book;
+            //todo log
+            throw new BookNotFoundException(id);
         }
     }
 
@@ -53,8 +49,11 @@ public class BookService {
     }
 
     public BookDTO findByTitle(String title) {
-
-        return dtoUtil.bookToDTO(bookRepository.findBookByTitle(title));
+        Book book = bookRepository.findBookByTitle(title);
+        if(book == null){
+            throw new BookNotFoundException(title);
+        }
+        return dtoUtil.bookToDTO(book);
     }
 
     public List<BookDTO> getAll() {
@@ -65,15 +64,18 @@ public class BookService {
     }
 
     public BookDTO insert(BookDTO book) {
-        authorService.insert(dtoUtil.authorToDTO(book.getAuthor()));
+        authorService.insert(book.getAuthor());
+        LOGGER.info("Created new book: " + book.toString());
         return dtoUtil.bookToDTO(bookRepository.insert(dtoUtil.dtoToBook(book)));
     }
 
     public BookDTO update(BookDTO book){
+        LOGGER.info("Updated book: " + book.toString());
        return dtoUtil.bookToDTO(bookRepository.save(dtoUtil.dtoToBook(book)));
     }
 
     public void delete(String id) {
+        LOGGER.info("Deleting book with id: " + id);
         bookRepository.deleteById(id);
     }
 

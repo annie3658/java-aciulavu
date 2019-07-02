@@ -1,11 +1,14 @@
 package com.library.application.service;
 
+import ch.qos.logback.classic.Logger;
 import com.library.application.dto.AuthorDTO;
 import com.library.application.entity.Author;
+import com.library.application.exception.AuthorNotFoundException;
 import com.library.application.repository.AuthorRepository;
 import com.library.application.utils.DTOUtil;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorService{
 
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(AuthorService.class);
     private final @NonNull AuthorRepository authorRepository;
     private DTOUtil dtoUtil = new DTOUtil();
 
@@ -26,7 +30,11 @@ public class AuthorService{
 
     private Author findById(String id){
        Optional<Author> foundAuthor = authorRepository.findById(id);
-        return setFoundAuthor(foundAuthor);
+        if (foundAuthor.isPresent()) {
+            return foundAuthor.get();
+        }
+        //todo log
+        throw new AuthorNotFoundException(id);
     }
 
     public AuthorDTO findAuthorById(String id){
@@ -66,6 +74,7 @@ public class AuthorService{
     public AuthorDTO insert(AuthorDTO author){
         Author existingAuthor = findByFullName(author.getLastName(), author.getFirstName());
         if(existingAuthor.getId().equals(StringUtils.EMPTY)) {
+            LOGGER.info("Created new author: " + author.toString());
             return dtoUtil.authorToDTO(authorRepository.insert(dtoUtil.dtoToAuthor(author)));
         }
         author.setId(existingAuthor.getId());
@@ -73,10 +82,12 @@ public class AuthorService{
     }
 
     public AuthorDTO update(AuthorDTO author){
+        LOGGER.info("Updated author: " + author.toString());
         return dtoUtil.authorToDTO(authorRepository.save(dtoUtil.dtoToAuthor(author)));
     }
 
     public void delete(String id){
+        LOGGER.info("Deleted author with id: " + id);
         authorRepository.deleteById(id);
 
     }

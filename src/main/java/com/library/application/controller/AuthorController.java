@@ -6,6 +6,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,12 +27,12 @@ public class AuthorController {
     }
 
     @PutMapping
-    public void insert(@RequestBody AuthorDTO author){
+    public void insert(@Valid @RequestBody AuthorDTO author){
         authorService.insert(author);
     }
 
     @PostMapping
-    public void update(@RequestBody AuthorDTO author){
+    public void update(@Valid @RequestBody AuthorDTO author){
         authorService.update(author);
     }
 
@@ -41,7 +42,7 @@ public class AuthorController {
     }
 
     @GetMapping("/author/{firstName}/{lastName}")
-    public AuthorDTO getAuthorByLastName(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName){
+    public AuthorDTO getAuthorByName(@PathVariable("firstName") String firstName,@PathVariable("lastName") String lastName){
         return authorService.findAuthorByFullName(lastName, firstName);
     }
 

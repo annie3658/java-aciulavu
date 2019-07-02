@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
 import java.util.Date;
 @Getter
 @Setter
@@ -11,9 +13,12 @@ public class AuthorDTO {
 
 
     private String id;
+    @NotEmpty(message = "Please provide a first name")
     private String firstName;
+    @NotEmpty(message = "Please provide a last name")
     private String lastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @Past(message = "Date of birth must be in the past")
     private Date dateOfBirth;
     private String bio;
 
@@ -64,5 +69,16 @@ public class AuthorDTO {
             return authorDTO;
 
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AuthorDTO{" +
+                "id='" + id + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", bio='" + bio + '\'' +
+                '}';
     }
 }

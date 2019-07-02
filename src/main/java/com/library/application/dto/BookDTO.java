@@ -1,21 +1,28 @@
 package com.library.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.library.application.entity.Author;
+import com.library.application.validator.Rating;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 @Getter
 @Setter
 public class BookDTO {
     private String isbn;
+    @NotEmpty(message = "Please provide a title")
     private String title;
     private String description;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @PastOrPresent(message = "The published date can't be in the future")
     private Date publishedDate;
+    @Rating
     private Double rating;
-    private Author author;
+    @NotNull(message = "Please provide an author")
+    private AuthorDTO author;
 
     private BookDTO(){
 
@@ -28,7 +35,7 @@ public class BookDTO {
         private String description;
         private Date publishedDate;
         private Double rating;
-        private Author author;
+        private AuthorDTO author;
 
         public Builder (String isbn){
             this.isbn = isbn;
@@ -54,7 +61,7 @@ public class BookDTO {
             return this;
         }
 
-        public Builder withAuthor(Author author){
+        public Builder withAuthor(AuthorDTO author){
             this.author = author;
             return this;
         }
@@ -70,5 +77,17 @@ public class BookDTO {
 
             return bookDTO;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "BookDTO{" +
+                "isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", publishedDate=" + publishedDate +
+                ", rating=" + rating +
+                ", author=" + author +
+                '}';
     }
 }

@@ -7,6 +7,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,12 +27,12 @@ public class BookController {
     }
 
     @PutMapping
-    public void insert(@RequestBody BookDTO book){
+    public void insert(@Valid @RequestBody BookDTO book){
         bookService.insert(book);
     }
 
     @PostMapping
-    public void update (@RequestBody BookDTO book){
+    public void update (@Valid @RequestBody BookDTO book){
         bookService.update(book);
     }
 
@@ -46,7 +47,7 @@ public class BookController {
     }
 
     @GetMapping("/bookById/{id}")
-    public BookDTO getBookById(@PathVariable("id") String id){
+    public BookDTO getBookById(@PathVariable("id") String id) {
         return bookService.findBookById(id);
     }
 

@@ -24,7 +24,7 @@ public class DTOUtil {
                 .withDescription(book.getDescription())
                 .withPublishedDate(book.getPublishedDate())
                 .withRating(book.getRating())
-                .withAuthor(book.getAuthor())
+                .withAuthor(authorToDTO(book.getAuthor()))
                 .build();
         return bookDTO;
     }
@@ -36,7 +36,7 @@ public class DTOUtil {
         book.setTitle(bookDTO.getTitle());
         book.setPublishedDate(bookDTO.getPublishedDate());
         book.setRating(bookDTO.getRating());
-        book.setAuthor(bookDTO.getAuthor());
+        book.setAuthor(dtoToAuthor(bookDTO.getAuthor()));
         return book;
     }
 
@@ -46,7 +46,7 @@ public class DTOUtil {
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
         author.setDateOfBirth(authorDTO.getDateOfBirth());
-        authorDTO.setBio(authorDTO.getBio());
+        author.setBio(authorDTO.getBio());
         return author;
     }
 }
