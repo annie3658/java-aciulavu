@@ -6,8 +6,7 @@ import com.library.application.entity.Author;
 import com.library.application.entity.Book;
 
 public class DTOUtil {
-    //log4j LOGGER
-    //
+
     public AuthorDTO authorToDTO(Author author){
         AuthorDTO authorDTO = new AuthorDTO.Builder(author.getId())
                 .withFirstName(author.getFirstName())

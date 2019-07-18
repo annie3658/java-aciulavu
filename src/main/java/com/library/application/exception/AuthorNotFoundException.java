@@ -2,7 +2,7 @@ package com.library.application.exception;
 
 public class AuthorNotFoundException extends RuntimeException {
 
-    public AuthorNotFoundException(String id) {
-        super("Author with id " + id + " not found");
+    public AuthorNotFoundException(String author) {
+        super("Author  " + author + " not found");
     }
 }

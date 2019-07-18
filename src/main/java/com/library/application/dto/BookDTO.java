@@ -9,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
+import java.util.Objects;
+
 @Getter
 @Setter
 public class BookDTO {
@@ -23,7 +25,7 @@ public class BookDTO {
     private Double rating;
     @NotNull(message = "Please provide an author")
     private AuthorDTO author;
-
+    private String coverLink;
     private BookDTO(){
 
     }
@@ -89,5 +91,23 @@ public class BookDTO {
                 ", rating=" + rating +
                 ", author=" + author +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BookDTO)) return false;
+        BookDTO bookDTO = (BookDTO) o;
+        return getIsbn().equals(bookDTO.getIsbn()) &&
+                getTitle().equals(bookDTO.getTitle()) &&
+                Objects.equals(getDescription(), bookDTO.getDescription()) &&
+                Objects.equals(getPublishedDate(), bookDTO.getPublishedDate()) &&
+                Objects.equals(getRating(), bookDTO.getRating()) &&
+                getAuthor().equals(bookDTO.getAuthor());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIsbn(), getTitle(), getDescription(), getPublishedDate(), getRating(), getAuthor());
     }
 }

@@ -27,13 +27,13 @@ public class BookController {
     }
 
     @PutMapping
-    public void insert(@Valid @RequestBody BookDTO book){
-        bookService.insert(book);
+    public BookDTO insert(@Valid @RequestBody BookDTO book){
+        return bookService.insert(book);
     }
 
     @PostMapping
-    public void update (@Valid @RequestBody BookDTO book){
-        bookService.update(book);
+    public BookDTO update (@Valid @RequestBody BookDTO book){
+        return bookService.update(book);
     }
 
     @DeleteMapping("/{id}")

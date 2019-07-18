@@ -27,13 +27,13 @@ public class AuthorController {
     }
 
     @PutMapping
-    public void insert(@Valid @RequestBody AuthorDTO author){
-        authorService.insert(author);
+    public AuthorDTO insert(@Valid @RequestBody AuthorDTO author){
+       return authorService.insert(author);
     }
 
     @PostMapping
-    public void update(@Valid @RequestBody AuthorDTO author){
-        authorService.update(author);
+    public AuthorDTO update(@Valid @RequestBody AuthorDTO author){
+        return authorService.update(author);
     }
 
     @GetMapping("/{id}")

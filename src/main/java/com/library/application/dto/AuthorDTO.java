@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.util.Date;
+import java.util.Objects;
+
 @Getter
 @Setter
 public class AuthorDTO {
@@ -80,5 +82,22 @@ public class AuthorDTO {
                 ", dateOfBirth=" + dateOfBirth +
                 ", bio='" + bio + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AuthorDTO)) return false;
+        AuthorDTO authorDTO = (AuthorDTO) o;
+        return getId().equals(authorDTO.getId()) &&
+                getFirstName().equals(authorDTO.getFirstName()) &&
+                getLastName().equals(authorDTO.getLastName()) &&
+                Objects.equals(getDateOfBirth(), authorDTO.getDateOfBirth()) &&
+                Objects.equals(getBio(), authorDTO.getBio());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getFirstName(), getLastName(), getDateOfBirth(), getBio());
     }
 }

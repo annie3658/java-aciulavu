@@ -33,7 +33,7 @@ public class AuthorService{
         if (foundAuthor.isPresent()) {
             return foundAuthor.get();
         }
-        //todo log
+        LOGGER.error("The Author with id {} was not found", id);
         throw new AuthorNotFoundException(id);
     }
 
@@ -61,11 +61,19 @@ public class AuthorService{
     }
 
     public AuthorDTO findAuthorByFullName(String lastName, String firstName){
-        return dtoUtil.authorToDTO(authorRepository.findAuthorByLastNameAndAndFirstName(lastName, firstName));
+       Author author = authorRepository.findAuthorByLastNameAndAndFirstName(lastName, firstName);
+       if(author == null){
+           LOGGER.error("The Author {} {} was not found", firstName, lastName);
+           throw new AuthorNotFoundException(firstName + lastName);
+       }
+        return dtoUtil.authorToDTO(author);
     }
 
     public List<AuthorDTO> getAll(){
         List<Author> authors = authorRepository.findAll();
+        if(authors.isEmpty()){
+            LOGGER.warn("The authors list is empty");
+        }
         return authors.stream()
                 .map(author -> dtoUtil.authorToDTO(author))
                 .collect(Collectors.toList());
