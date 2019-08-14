@@ -1,8 +1,11 @@
 package com.library.application.service;
+
 import ch.qos.logback.classic.Logger;
+import com.library.application.config.CoversConfig;
 import com.library.application.dto.AuthorBooksDTO;
 import com.library.application.dto.AuthorDTO;
 import com.library.application.dto.BookDTO;
+import com.library.application.dto.CoverDTO;
 import com.library.application.entity.Book;
 import com.library.application.exception.BookNotFoundException;
 import com.library.application.repository.BookRepository;
@@ -11,6 +14,8 @@ import lombok.NonNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +28,15 @@ public class BookService {
 
     private final @NonNull BookRepository bookRepository;
     private final @NonNull AuthorService authorService;
+    private WebClient.Builder webClientBuilder;
+    private CoversConfig config;
 
     @Autowired
-    public BookService(@NonNull BookRepository bookRepository, @NonNull AuthorService authorService) {
+    public BookService(@NonNull BookRepository bookRepository, @NonNull AuthorService authorService, CoversConfig config, WebClient.Builder webClientBuilder) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
+        this.config = config;
+        this.webClientBuilder = webClientBuilder;
     }
 
     private DTOUtil dtoUtil = new DTOUtil();
@@ -45,7 +54,16 @@ public class BookService {
     }
 
     public BookDTO findBookById(String id){
-        return dtoUtil.bookToDTO(findById(id));
+        BookDTO book = dtoUtil.bookToDTO(findById(id));
+        CoverDTO cover = webClientBuilder.build()
+                .get()
+                .uri(config.getUrl() + book.getTitle())
+                .retrieve()
+                .bodyToMono(CoverDTO.class)
+                .switchIfEmpty(Mono.empty())
+                .block();
+        book.setCover(cover);
+        return book;
     }
 
     public BookDTO findByTitle(String title) {
@@ -54,7 +72,16 @@ public class BookService {
             LOGGER.error("The Book with the title {} was not found", title);
             throw new BookNotFoundException(title);
         }
-        return dtoUtil.bookToDTO(book);
+        CoverDTO cover = webClientBuilder.build()
+                .get()
+                .uri(config.getCover() + title)
+                .retrieve()
+                .bodyToMono(CoverDTO.class)
+                .switchIfEmpty(Mono.empty())
+                .block();
+        BookDTO bookDTO = dtoUtil.bookToDTO(book);
+        bookDTO.setCover(cover);
+        return bookDTO;
     }
 
     public List<BookDTO> getAll() {
@@ -62,8 +89,20 @@ public class BookService {
         if(books.isEmpty()){
             LOGGER.warn("The books list is empty");
         }
+
         return books.stream()
-                .map(book -> dtoUtil.bookToDTO(book))
+                .map(book -> {
+                    BookDTO bookDTO = dtoUtil.bookToDTO(book);
+                    CoverDTO cover = webClientBuilder.build()
+                            .get()
+                            .uri(config.getCover() + book.getTitle())
+                            .retrieve()
+                            .bodyToMono(CoverDTO.class)
+                            .switchIfEmpty(Mono.empty())
+                            .block();
+                    if(cover != null) bookDTO.setCover(cover);
+                    return bookDTO;
+                })
                 .collect(Collectors.toList());
     }
 

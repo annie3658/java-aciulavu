@@ -1,0 +1,15 @@
+covers:
+  url: http://localhost:8081/covers/
+  cover: http://localhost:8081/covers/cover/
+
+
+spring :
+      data :
+          mongodb:
+              host: localhost
+              port: 27017
+              database: libraryDb
+
+
+
+

@@ -20,7 +20,7 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<AuthorDTO> getAllAuthors(){
         return authorService.getAll();
 

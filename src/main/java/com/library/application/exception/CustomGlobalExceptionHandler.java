@@ -51,4 +51,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         ErrorResponse error = new ErrorResponse("Server error", details);
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(CoverNotFoundException.class)
+    public final ResponseEntity<Object> handleCoverNotFoundException(CoverNotFoundException ex) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Cover not found", details);
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
+    }
 }

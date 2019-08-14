@@ -25,7 +25,7 @@ public class BookDTO {
     private Double rating;
     @NotNull(message = "Please provide an author")
     private AuthorDTO author;
-    private String coverLink;
+    private CoverDTO cover;
     private BookDTO(){
 
     }
@@ -38,6 +38,7 @@ public class BookDTO {
         private Date publishedDate;
         private Double rating;
         private AuthorDTO author;
+        private CoverDTO cover;
 
         public Builder (String isbn){
             this.isbn = isbn;
@@ -68,6 +69,11 @@ public class BookDTO {
             return this;
         }
 
+        public Builder withCover(CoverDTO cover){
+            this.cover = cover;
+            return this;
+        }
+
         public BookDTO build(){
             BookDTO bookDTO = new BookDTO();
             bookDTO.isbn = this.isbn;
@@ -76,21 +82,9 @@ public class BookDTO {
             bookDTO.rating = this.rating;
             bookDTO.publishedDate = this.publishedDate;
             bookDTO.author = this.author;
-
+            bookDTO.cover = this.cover;
             return bookDTO;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "BookDTO{" +
-                "isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", publishedDate=" + publishedDate +
-                ", rating=" + rating +
-                ", author=" + author +
-                '}';
     }
 
     @Override
@@ -103,11 +97,25 @@ public class BookDTO {
                 Objects.equals(getDescription(), bookDTO.getDescription()) &&
                 Objects.equals(getPublishedDate(), bookDTO.getPublishedDate()) &&
                 Objects.equals(getRating(), bookDTO.getRating()) &&
-                getAuthor().equals(bookDTO.getAuthor());
+                Objects.equals(getAuthor(), bookDTO.getAuthor()) &&
+                Objects.equals(getCover(), bookDTO.getCover());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIsbn(), getTitle(), getDescription(), getPublishedDate(), getRating(), getAuthor());
+        return Objects.hash(getIsbn(), getTitle(), getDescription(), getPublishedDate(), getRating(), getAuthor(), getCover());
+    }
+
+    @Override
+    public String toString() {
+        return "BookDTO{" +
+                "isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", publishedDate=" + publishedDate +
+                ", rating=" + rating +
+                ", author=" + author +
+                ", cover=" + cover +
+                '}';
     }
 }
