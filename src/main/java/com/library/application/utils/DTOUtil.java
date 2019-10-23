@@ -2,10 +2,8 @@ package com.library.application.utils;
 
 import com.library.application.dto.AuthorDTO;
 import com.library.application.dto.BookDTO;
-import com.library.application.dto.UserDTO;
 import com.library.application.entity.Author;
 import com.library.application.entity.Book;
-import com.library.application.entity.User;
 
 public class DTOUtil {
 
@@ -49,25 +47,5 @@ public class DTOUtil {
         author.setDateOfBirth(authorDTO.getDateOfBirth());
         author.setBio(authorDTO.getBio());
         return author;
-    }
-
-    public User dtoToUser(UserDTO userDTO){
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setName(userDTO.getName());
-        user.setPassword(userDTO.getPassword());
-        user.setUsername(userDTO.getUsername());
-        user.setRoles(userDTO.getRoles());
-        return  user;
-    }
-
-    public UserDTO userToDTO(User user){
-        UserDTO userDTO = new UserDTO.Builder(user.getId())
-                .withName(user.getName())
-                .withUsername(user.getUsername())
-                .withPassword(user.getPassword())
-                .withRoles(user.getRoles())
-                .build();
-        return userDTO;
     }
 }

@@ -57,7 +57,7 @@ public class BookService {
         BookDTO book = dtoUtil.bookToDTO(findById(id));
         CoverDTO cover = webClientBuilder.build()
                 .get()
-                .uri(config.getUrl() + book.getTitle())
+                .uri(config.getCover() + book.getTitle())
                 .retrieve()
                 .bodyToMono(CoverDTO.class)
                 .switchIfEmpty(Mono.empty())
