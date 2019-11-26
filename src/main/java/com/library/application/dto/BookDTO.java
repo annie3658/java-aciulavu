@@ -18,7 +18,7 @@ public class BookDTO {
     @NotEmpty(message = "Please provide a title")
     private String title;
     private String description;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
     @PastOrPresent(message = "The published date can't be in the future")
     private Date publishedDate;
     @Rating

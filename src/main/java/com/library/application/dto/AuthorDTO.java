@@ -19,7 +19,7 @@ public class AuthorDTO {
     private String firstName;
     @NotEmpty(message = "Please provide a last name")
     private String lastName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @Past(message = "Date of birth must be in the past")
     private Date dateOfBirth;
     private String bio;

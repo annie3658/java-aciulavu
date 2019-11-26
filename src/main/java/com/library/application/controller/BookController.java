@@ -14,7 +14,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class BookController {
 
     private final @NonNull BookService bookService;
@@ -28,22 +29,22 @@ public class BookController {
 
     }
 
-    @GetMapping
+    @GetMapping("/books")
     public List<BookDTO> getAllBooks(){
         return bookService.getAll();
     }
 
-    @PutMapping
+    @PostMapping("/book")
     public BookDTO insert(@Valid @RequestBody BookDTO book){
         return bookService.insert(book);
     }
 
-    @PostMapping
+    @PutMapping("/book/{id}")
     public BookDTO update (@Valid @RequestBody BookDTO book){
         return bookService.update(book);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/book/{id}")
     public  void delete(@PathVariable("id") String id) {
         bookService.delete(id);
     }
