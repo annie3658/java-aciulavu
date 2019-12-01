@@ -18,7 +18,7 @@ public class BookDTO {
     @NotEmpty(message = "Please provide a title")
     private String title;
     private String description;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd/MM/yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     @PastOrPresent(message = "The published date can't be in the future")
     private Date publishedDate;
     @Rating
@@ -92,18 +92,18 @@ public class BookDTO {
         if (this == o) return true;
         if (!(o instanceof BookDTO)) return false;
         BookDTO bookDTO = (BookDTO) o;
-        return getIsbn().equals(bookDTO.getIsbn()) &&
-                getTitle().equals(bookDTO.getTitle()) &&
-                Objects.equals(getDescription(), bookDTO.getDescription()) &&
-                Objects.equals(getPublishedDate(), bookDTO.getPublishedDate()) &&
-                Objects.equals(getRating(), bookDTO.getRating()) &&
-                Objects.equals(getAuthor(), bookDTO.getAuthor()) &&
-                Objects.equals(getCover(), bookDTO.getCover());
+        return isbn.equals(bookDTO.isbn) &&
+                Objects.equals(title, bookDTO.title) &&
+                Objects.equals(description, bookDTO.description) &&
+                Objects.equals(publishedDate, bookDTO.publishedDate) &&
+                Objects.equals(rating, bookDTO.rating) &&
+                Objects.equals(author, bookDTO.author) &&
+                Objects.equals(cover, bookDTO.cover);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIsbn(), getTitle(), getDescription(), getPublishedDate(), getRating(), getAuthor(), getCover());
+        return Objects.hash(isbn, title, description, publishedDate, rating, author, cover);
     }
 
     @Override

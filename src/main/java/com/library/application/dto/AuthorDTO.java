@@ -19,12 +19,12 @@ public class AuthorDTO {
     private String firstName;
     @NotEmpty(message = "Please provide a last name")
     private String lastName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Past(message = "Date of birth must be in the past")
     private Date dateOfBirth;
     private String bio;
 
-    private AuthorDTO(){
+    private AuthorDTO() {
 
     }
 
@@ -35,31 +35,31 @@ public class AuthorDTO {
         private Date dateOfBirth;
         private String bio;
 
-        public Builder (String id){
+        public Builder(String id) {
             this.id = id;
         }
 
-        public Builder withFirstName(String firstName){
+        public Builder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public Builder withLastName(String lastName){
+        public Builder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public Builder withDateOfBirth(Date dateOfBirth){
+        public Builder withDateOfBirth(Date dateOfBirth) {
             this.dateOfBirth = dateOfBirth;
             return this;
         }
 
-        public Builder withBio(String bio){
+        public Builder withBio(String bio) {
             this.bio = bio;
             return this;
         }
 
-        public AuthorDTO build(){
+        public AuthorDTO build() {
 
             AuthorDTO authorDTO = new AuthorDTO();
             authorDTO.firstName = this.firstName;
@@ -89,15 +89,15 @@ public class AuthorDTO {
         if (this == o) return true;
         if (!(o instanceof AuthorDTO)) return false;
         AuthorDTO authorDTO = (AuthorDTO) o;
-        return getId().equals(authorDTO.getId()) &&
-                getFirstName().equals(authorDTO.getFirstName()) &&
-                getLastName().equals(authorDTO.getLastName()) &&
-                Objects.equals(getDateOfBirth(), authorDTO.getDateOfBirth()) &&
-                Objects.equals(getBio(), authorDTO.getBio());
+        return id.equals(authorDTO.id) &&
+                Objects.equals(firstName, authorDTO.firstName) &&
+                Objects.equals(lastName, authorDTO.lastName) &&
+                Objects.equals(dateOfBirth, authorDTO.dateOfBirth) &&
+                Objects.equals(bio, authorDTO.bio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getDateOfBirth(), getBio());
+        return Objects.hash(id, firstName, lastName, dateOfBirth, bio);
     }
 }

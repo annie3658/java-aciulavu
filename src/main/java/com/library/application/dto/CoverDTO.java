@@ -10,7 +10,6 @@ public class CoverDTO {
     private String id;
     @NotEmpty(message = "Please provide a link")
     private String link;
-    @NotEmpty(message = "Please provide a book title")
     private String bookTitle;
 
     public CoverDTO() {

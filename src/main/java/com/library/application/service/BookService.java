@@ -28,13 +28,15 @@ public class BookService {
 
     private final @NonNull BookRepository bookRepository;
     private final @NonNull AuthorService authorService;
+    private final @NonNull CoverService coverService;
     private WebClient.Builder webClientBuilder;
     private CoversConfig config;
 
     @Autowired
-    public BookService(@NonNull BookRepository bookRepository, @NonNull AuthorService authorService, CoversConfig config, WebClient.Builder webClientBuilder) {
+    public BookService(@NonNull BookRepository bookRepository, @NonNull AuthorService authorService, @NonNull CoverService coverService, CoversConfig config, WebClient.Builder webClientBuilder) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
+        this.coverService = coverService;
         this.config = config;
         this.webClientBuilder = webClientBuilder;
     }
@@ -108,17 +110,22 @@ public class BookService {
 
     public BookDTO insert(BookDTO book) {
         authorService.insert(book.getAuthor());
+        book.getCover().setBookTitle(book.getTitle());
+        coverService.insert(book.getCover());
         LOGGER.info("Created new book: " + book.toString());
         return dtoUtil.bookToDTO(bookRepository.insert(dtoUtil.dtoToBook(book)));
     }
 
     public BookDTO update(BookDTO book){
         LOGGER.info("Updated book: " + book.toString());
+        coverService.update(book.getCover());
        return dtoUtil.bookToDTO(bookRepository.save(dtoUtil.dtoToBook(book)));
     }
 
     public void delete(String id) {
         LOGGER.info("Deleting book with id: " + id);
+        BookDTO book = findBookById(id);
+        coverService.delete(book.getCover().getId());
         bookRepository.deleteById(id);
     }
 
