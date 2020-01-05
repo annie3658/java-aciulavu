@@ -8,6 +8,7 @@ import com.library.application.repository.AuthorRepository;
 import com.library.application.utils.DTOUtil;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,8 @@ public class AuthorService{
         Author existingAuthor = findByFullName(author.getLastName(), author.getFirstName());
         if(existingAuthor.getId().equals(StringUtils.EMPTY)) {
             LOGGER.info("Created new author: " + author.toString());
+            ObjectId id = new ObjectId();
+            author.setId(String.valueOf(id));
             return dtoUtil.authorToDTO(authorRepository.insert(dtoUtil.dtoToAuthor(author)));
         }
         author.setId(existingAuthor.getId());
